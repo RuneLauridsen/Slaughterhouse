@@ -1,0 +1,105 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_generic_services = true;
+
+package slaughterhouse.shared.grpc;
+
+/****************************************
+ *
+ * Shared
+ *
+ ****************************************/
+
+message Pig {
+  double weight = 1;
+  int32 registrationNumber = 2;
+  string farm = 3;
+  string registrationDate = 4;
+  string splitDate = 5;
+}
+
+message Pigs {
+  repeated Pig pigs = 1;
+}
+
+message PigPart {
+  int32 partId = 1;
+  string partName = 2;
+  double partWeight = 4;
+}
+
+message PigParts {
+  repeated PigPart pigParts = 1;
+}
+
+/****************************************
+ *
+ * Request/response station 2
+ *
+ ****************************************/
+
+message GetReadyPigsRequest {
+}
+
+message GetReadyPigsResponse {
+  Pigs pigs = 1;
+}
+
+message SplitAPigRequest {
+  int32 regNumber = 1;
+  PigParts pigParts = 2;
+}
+
+message SplitAPigResponse {
+  bool success = 1;
+}
+
+message CreateTrayRequest {
+  int32 maxWeight = 1;
+  PigParts pigParts = 2;
+}
+
+message CreateTrayResponse{
+  bool success = 1;
+}
+
+service Slaughterhouse2Service {
+  rpc getReadyPigs (GetReadyPigsRequest) returns (GetReadyPigsResponse) {}
+  rpc splitAPig (SplitAPigRequest) returns (SplitAPigResponse) {}
+  rpc createTray (CreateTrayRequest) returns (CreateTrayResponse) {}
+}
+
+/****************************************
+ *
+ * Request/response station 3
+ *
+ ****************************************/
+
+message GetReadyPigPartsRequest {
+}
+
+message GetReadyPigPartsResponse {
+  PigParts pigs = 1;
+}
+
+message GetAllPigsInPackageRequest {
+  int32 packageId = 1;
+}
+
+message GetAllPigsInPackageResponse {
+  repeated int32 regNumbers = 1;
+}
+
+message GetAllPackagesFromPigRequest {
+  int32 regNumber = 1;
+}
+
+message GetAllPackagesFromPigResponse {
+  repeated int32 packageIds = 1;
+}
+
+service Slaughterhouse3Service {
+  rpc getReadyPigParts (GetReadyPigPartsRequest) returns (GetReadyPigPartsResponse);
+  rpc getAllPigsInPackage (GetAllPigsInPackageRequest) returns (GetAllPigsInPackageResponse) {}
+  rpc getAllPackagesFromPig (GetAllPackagesFromPigRequest) returns (GetAllPackagesFromPigResponse) {}
+}
